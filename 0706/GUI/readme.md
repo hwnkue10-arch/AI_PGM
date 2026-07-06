@@ -41,7 +41,7 @@ python -m PyInstaller -F -w 파일이름.py
 예시
 
 ```bash
-python -m PyInstaller -F -w calculator.py
+python -m PyInstaller -F -w cliCalc.py
 ```
 
 ```bash
@@ -49,7 +49,7 @@ python -m PyInstaller -F -w paint.py
 ```
 
 ```bash
-python -m PyInstaller -F -w notepad.py
+python -m PyInstaller -F -w note.py
 ```
 
 옵션 설명
