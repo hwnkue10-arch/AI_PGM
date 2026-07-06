@@ -1,55 +1,89 @@
-# 🎨 Paint
+## 실행 파일(EXE) 생성 방법
 
-Tkinter를 이용해 만든 간단한 그림판 프로그램입니다.
+### 1. PyInstaller 설치
 
-## 기능
-
-- 펜
-- 지우개
-- 색상 선택
-- 전체 지우기
-
-## 실행 방법
-
-### 1. 저장소 클론
-
-```bash
-git clone https://github.com/사용자이름/Paint.git
-cd Paint
-```
-
-### 2. Python 설치
-
-Python 3.10 이상을 설치합니다.
-
-### 3. 프로그램 실행
-
-```bash
-python paint.py
-```
-
-## 실행 파일(EXE) 만들기
-
-PyInstaller를 설치합니다.
+터미널(CMD, PowerShell 또는 VS Code 터미널)을 열고 다음 명령어를 실행합니다.
 
 ```bash
 pip install pyinstaller
 ```
 
-실행 파일 생성
+또는
 
 ```bash
-pyinstaller -F -w paint.py
+python -m pip install pyinstaller
 ```
 
-생성된 실행 파일은
+---
+
+### 2. 프로젝트 폴더로 이동
+
+```bash
+cd 프로젝트_폴더
+```
+
+예시
+
+```bash
+cd D:\PythonProject
+```
+
+---
+
+### 3. 실행 파일 생성
+
+GUI 프로그램(Tkinter)의 경우 아래 명령어를 실행합니다.
+
+```bash
+python -m PyInstaller -F -w 파일이름.py
+```
+
+예시
+
+```bash
+python -m PyInstaller -F -w calculator.py
+```
+
+```bash
+python -m PyInstaller -F -w paint.py
+```
+
+```bash
+python -m PyInstaller -F -w notepad.py
+```
+
+옵션 설명
+
+- `-F` : 하나의 실행 파일(.exe)로 생성
+- `-w` : 콘솔(CMD) 창을 표시하지 않음 (Tkinter GUI 프로그램에 권장)
+
+---
+
+### 4. 실행 파일 확인
+
+빌드가 완료되면 프로젝트 폴더에 다음과 같은 파일과 폴더가 생성됩니다.
 
 ```
-dist/paint.exe
+build/
+dist/
+파일이름.spec
 ```
 
-에서 확인할 수 있습니다.
+생성된 실행 파일은 `dist` 폴더 안에서 확인할 수 있습니다.
 
-## 사용 라이브러리
+예시
 
-- tkinter (Python 기본 포함)
+```
+dist/
+ ├── calculator.exe
+ ├── paint.exe
+ └── notepad.exe
+```
+
+---
+
+### 참고
+
+`build` 폴더와 `.spec` 파일은 빌드 과정에서 생성되는 파일이므로 삭제해도 됩니다.
+
+GitHub에는 일반적으로 소스 코드(`.py`)만 업로드하며, `build`, `dist`, `.spec` 파일은 업로드하지 않는 것을 권장합니다.
