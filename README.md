@@ -1,2 +1,4 @@
 # AI_PGM
  인텔 7기 인공지능 수업
+
+https://ftpserver.ksecole.kr/files/
