@@ -1,0 +1,79 @@
+----------------------------------------------------------------------| vscode |--------------------------------------------------------------------
+uv로 환경 맞추어서 실행
+ Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+$Env:Path+= "C:\Users\user\.local\bin"
+
+uv :: C:\Users\user\.local\bin
+
+PS D:\intel\pyeqw> uv venv Using CPython 3.12.13 Creating virtual environment at: .venv Activate with: .venv\Scripts\activate PS D:\intel\pyeqw> .venv\Scripts\activate (pyeqw) PS D:\intel\pyeqw> uv add jupyterlab ipykernel numpy pandas matplotlib
+파일 실행
+uv run main.py
+
+----------------------------------------------------------------------| conda |--------------------------------------------------------------------
+
+설치
+conda create -n con312 python=3.12
+환경 설정
+conda activate con312
+conda install jupyter notebook
+확인
+conda info --envs
+
+jupyter lab --notebook-dir=D:\intel\pyeqw\jupytercon
+
+----------------------------------------------------------------------| osboxes |--------------------------------------------------------------------
+>passwd
+>sudo passwd root
+>su - root
+>sudo apt update
+>sudo apt upgrade
+
+#설치
+>sudo apt install openssh-server
+>sudo systemctl status sshcd
+>sudo systemctl start ssh
+
+#ap 설정
+>cd/etc/netplan
+>sudo vi 50 =>TAB
+>sudo netplan apply
+>ip a => 192.168.100.50
+
+
+>sudo apt install apache2
+>sudo systemctl status apache2
+>sudo systemctl start apache2i
+
+>sudo cp second.html /var/www/html
+
+sudo chown osboxes:osboxes test.html
+
+# vi 사용
+esc : 명령어 모드
+i, a, o, O :입력
+x, dd : 삭제
+yy, p : 복 붙
+h, j, k, l =>이동
+
+:set number =>라인보기
+:set nonumber =>라인 없애기
+:3 =>라인이동
+G =>마지막 라인
+:wq =>저장후 종료
+
+
+>sudo apt install curl
+>curl -LsSf https://astral.sh/uv/install.sh | sh
+>source $HOME/.local/bin/env
+>uv init pyprj --python=3.12
+>uv python list
+
+>uv python install 3.12
+>uv add ipykernel jupyterlab
+>uv venv --python=3.12
+>source .venv/bin/activate
+
+1. ssh 설정
+2. web server                   ------------> ★ vi editor ★
+3. db server                                              ㄴvs cod linux
+4. 고정  ip 설정                                                  원격접속
