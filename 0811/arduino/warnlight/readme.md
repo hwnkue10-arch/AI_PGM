@@ -4,7 +4,7 @@ Tinkercad에서 Arduino를 이용하여 제작한 간단한 **경광등(Warning 
 
 두 개의 LED가 일정한 간격으로 번갈아 켜지면서 경광등처럼 동작합니다.
 
-![Arduino LED Warning Light](images/circuit.png)
+![Arduino LED Warning Light](circuit.png)
 
 ## 🔧 Components
 
