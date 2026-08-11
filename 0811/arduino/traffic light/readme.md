@@ -6,7 +6,7 @@ Arduino를 이용하여 제작한 **자동차 신호등과 보행자 신호등 �
 
 ## 📷 picture
 
-![Arduino LED Warning Light](traffic light.png)
+![Traffic Light](traffic%20light.png)
 
 ## 🔧 Components
 
