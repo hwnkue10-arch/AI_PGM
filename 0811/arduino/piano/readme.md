@@ -87,14 +87,3 @@ void loop(){
 * 🔘 `INPUT_PULLUP`을 이용한 버튼 입력
 * 🔇 버튼을 누르지 않을 때 자동으로 소리 정지
 
-````
-
-**파일 구조는 이렇게 하면 돼:**
-
-```text
-project/
-├── README.md
-└── piano.png
-````
-
-즉, GitHub에 `README.md`와 **`piano.png`를 같은 폴더에 올리면** 회로 사진이 README에 표시돼.
