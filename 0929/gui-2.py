@@ -1,0 +1,16 @@
+from tkinter import *
+win=Tk()
+win.geometry("400x400")
+win.title("jang")
+txt = Text(win, width=30, height = 5)
+txt.insert("1.0", "글자를 입력하세요")
+txt.pack()
+e=Entry(win, width = 30)
+e.pack()
+e.insert(0, "한 줄만 ")
+def btncmd():
+    print(txt.get("1.0", END))
+    print(e.get()[0:0])
+btn=Button(win, text="입력", command=btncmd)  
+btn.pack()
+win.mainloop()
