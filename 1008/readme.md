@@ -1,304 +1,308 @@
-# GX Works2 - MX OPC Configurator - Factory I/O 연동
+# MX OPC Configurator를 이용한 GX Works2 - Factory I/O 연동
 
-GX Works2에서 작성한 Mitsubishi PLC 레더 프로그램을 **MX OPC Configurator**를 이용해 OPC 서버와 연결하고, **Factory I/O에서 PLC의 입출력 데이터를 브라우징하여 사용하는 방법**을 정리한 실습 기록입니다.
+## 1. 개요
 
-## 1. 실습 목표
+GX Works2에서 작성한 PLC 프로그램을 **Factory I/O와 연동**하기 위해 MX OPC Configurator를 사용하였다.
 
-GX Works2에서 작성한 PLC 프로그램을 Factory I/O와 연동하여 실제 자동화 시스템과 유사한 환경에서 동작을 확인합니다.
+이번 실습에서는 실제 PLC 장비 대신 **GX Simulator2**를 사용하여 PLC 프로그램을 실행하고, MX OPC Configurator에서 PLC 디바이스를 OPC Data Tag로 등록한 뒤 Factory I/O에서 해당 Tag를 Browse하여 연결하였다.
 
-전체 구성은 다음과 같습니다.
+전체적인 구성은 다음과 같다.
 
 ```text
 GX Works2
-    │
-    │ PLC 프로그램
-    ▼
-Mitsubishi PLC
-    │
-    │ OPC 통신
-    ▼
+   │
+   │ PLC Program
+   ▼
+GX Simulator2
+   │
+   │
+   ▼
 MX OPC Configurator
-    │
-    │ OPC Tag
-    ▼
+   │
+   │ OPC Data Tag
+   ▼
 Factory I/O
 ```
 
-핵심적으로 다음 과정을 수행합니다.
-
-1. GX Works2에서 PLC 레더 프로그램 작성
-2. MX OPC Configurator에서 PLC 장치 및 디바이스 설정
-3. OPC를 통해 PLC의 디바이스를 Tag로 등록
-4. Factory I/O에서 OPC 서버에 연결
-5. Factory I/O에서 PLC Tag를 Browse
-6. 센서 입력과 액추에이터 출력을 PLC와 연결
-7. PLC 프로그램과 Factory I/O의 동작 확인
+핵심은 **MX OPC Configurator에서 PLC의 디바이스를 OPC Tag로 구성하는 것**이다.
 
 ---
 
-## 2. 사용 프로그램
+# 2. Address Space 생성
 
-| 프로그램                | 용도                    |
-| ------------------- | --------------------- |
-| GX Works2           | PLC 레더 프로그램 작성        |
-| MX OPC Configurator | OPC 통신 및 PLC 디바이스 설정  |
-| Factory I/O         | 가상 자동화 설비 구성 및 PLC 연동 |
+MX OPC Configurator를 실행한 후 먼저 PLC Simulator와 연결하기 위한 Address Space를 생성한다.
 
-> 실제 사용한 PLC 기종, GX Works2 버전, MX OPC Configurator 버전은 실습 환경에 맞게 추가합니다.
+## 2.1 New MX Device
 
----
-
-## 3. GX Works2 레더 프로그램 작성
-
-먼저 GX Works2에서 Factory I/O와 연동할 PLC 프로그램을 작성합니다.
-
-예를 들어 센서 입력을 받아 출력 장치를 제어하는 간단한 구조를 구성할 수 있습니다.
+`Address Space`에서 우클릭한 후
 
 ```text
-입력
-X0 ────────┐
-           │
-           ├──── Y0
-           │
-X1 ────────┘
+New MX Device
 ```
 
-실제 프로젝트에서는 Factory I/O의 센서와 액추에이터에 대응하도록 PLC 디바이스를 지정합니다.
+를 선택한다.
 
-예:
+이후 `Configure`에 들어가 PLC Simulator와 연결할 설정을 진행한다.
+
+### PC Side I/F 설정
+
+`PC Side I/F`에서 다음과 같이 설정한다.
 
 ```text
-X0 : Sensor Input
-X1 : Start Input
-
-Y0 : Motor
-Y1 : Lamp
+PC Side I/F
+└─ GX Simulator2
 ```
 
-### 레더 프로그램
+GX Works2에서 실행할 Simulator와 OPC Configurator를 연결하기 위한 설정이다.
 
-> 여기에 실제 GX Works2 레더 화면을 캡처해서 추가합니다.
+### Target Simulator 설정
 
-![GX Works2 Ladder](screenshots/01_gxworks2_ladder.png)
-
----
-
-## 4. MX OPC Configurator 설정
-
-GX Works2에서 작성한 PLC 프로그램의 디바이스를 Factory I/O에서 사용하기 위해 MX OPC Configurator를 설정합니다.
-
-먼저 MX OPC Configurator에서 PLC와 통신하기 위한 장치를 등록합니다.
-
-> 여기에 MX OPC Configurator 설정 화면을 추가합니다.
-
-![MX OPC Configurator](screenshots/02_mx_opc_configurator.png)
-
-### 주요 설정
-
-실습 환경에 따라 다음 항목을 설정합니다.
-
-* PLC 종류
-* 통신 방식
-* PLC IP 주소 또는 통신 설정
-* PLC Station
-* 디바이스 영역
-* OPC Tag
-
----
-
-## 5. PLC 디바이스와 OPC Tag 연결
-
-Factory I/O에서 사용할 PLC 디바이스를 OPC Tag로 등록합니다.
-
-예를 들어 다음과 같이 구성할 수 있습니다.
-
-| PLC Device | 역할    | Factory I/O |
-| ---------- | ----- | ----------- |
-| X0         | 센서 입력 | Sensor      |
-| X1         | 시작 입력 | Start       |
-| Y0         | 모터 출력 | Motor       |
-| Y1         | 램프 출력 | Lamp        |
-
-OPC 서버에서 해당 디바이스가 정상적으로 등록되었는지 확인합니다.
-
-![OPC Device Setting](screenshots/03_opc_device_setting.png)
-
----
-
-## 6. Factory I/O OPC 연결
-
-Factory I/O를 실행한 뒤 PLC 연결을 설정합니다.
-
-Factory I/O의 Driver 설정에서 OPC 서버를 선택합니다.
+Target Simulator에서는
 
 ```text
-Factory I/O
-   ↓
-Drivers
-   ↓
-OPC
-   ↓
-OPC Server 선택
+Target Simulator
+└─ SimulatorA
 ```
 
-연결 후 **Browse** 기능을 이용하여 OPC 서버에 등록된 PLC Tag를 확인합니다.
+를 선택한다.
 
-![Factory I/O Driver](screenshots/04_factory_io_driver.png)
+설정을 완료한 후 `Next`를 누르고 `Finish`를 선택한다.
+
+마지막으로 설정 확인 창에서 모두 확인하여 Address Space를 생성한다.
 
 ---
 
-## 7. Factory I/O에서 Tag Browse
+# 3. Data Tag 생성
 
-OPC 서버와 정상적으로 연결되었다면 Factory I/O에서 PLC 디바이스를 Browse할 수 있습니다.
+Address Space가 생성되면 해당 공간에서 PLC 디바이스를 OPC Tag로 등록한다.
 
-예:
+생성된 Address Space에서 우클릭 후
 
 ```text
-OPC Server
- ├─ X0
- ├─ X1
- ├─ Y0
- └─ Y1
+New Data Tag
 ```
 
-각 Tag를 Factory I/O의 센서 및 액추에이터에 연결합니다.
+를 선택한다.
+
+Data Tag를 생성할 때 주요하게 설정하는 항목은 다음과 같다.
+
+| 항목          | 설명               |
+| ----------- | ---------------- |
+| Name        | OPC에서 사용할 Tag 이름 |
+| I/O Address | PLC 디바이스 주소      |
+| Data Type   | 해당 데이터의 자료형      |
+| Poll Method | PLC 값을 읽어오는 주기   |
+
+예를 들어 PLC에서 사용하는 X, Y, D, M 등의 디바이스를 각각 Data Tag로 추가할 수 있다.
+
+```text
+X
+Y
+D
+M
+```
+
+### 예시
+
+```text
+Name       : Sensor_X0
+I/O Address: X0
+Data Type  : Boolean
+```
+
+실제 사용하는 PLC 디바이스에 맞춰 Name과 I/O Address를 설정한다.
+
+---
+
+# 4. Data Polling 설정
+
+Data Tag를 생성한 후 `Data Polling` 설정을 확인한다.
+
+여기에서 `Poll Method`를 설정하여 PLC 데이터를 주기적으로 읽어오도록 한다.
 
 예를 들어:
 
 ```text
-Factory I/O Sensor
-        │
-        ▼
-       X0
-        │
-        ▼
-   PLC Ladder
-        │
-        ▼
-       Y0
-        │
-        ▼
-Factory I/O Motor
+Poll Method
+└─ 100 ms
 ```
+
+로 설정하면 약 100 ms 주기로 해당 PLC 데이터를 Polling하는 방식으로 구성할 수 있다.
+
+따라서 Factory I/O에서 PLC의 상태 변화를 확인할 때 OPC를 통해 주기적으로 데이터를 읽을 수 있다.
 
 ---
 
-## 8. 동작 확인
+# 5. Multiply를 이용한 Data Tag 복제
 
-모든 설정이 완료되면 Factory I/O를 실행하고 PLC 프로그램을 Monitor 상태로 확인합니다.
+동일한 형식의 PLC 디바이스를 여러 개 사용하는 경우 각각의 Data Tag를 일일이 생성하는 대신 `Multiply` 기능을 이용하여 복제할 수 있다.
 
-센서가 동작하면 Factory I/O에서 OPC를 통해 PLC 입력 디바이스가 변경되고, PLC 레더 프로그램의 조건에 따라 출력 디바이스가 변경됩니다.
-
-최종적으로 다음과 같은 흐름을 확인할 수 있습니다.
+예를 들어 다음과 같이 여러 PLC 디바이스를 사용하는 경우:
 
 ```text
-[Factory I/O Sensor]
-        │
-        │ Input
-        ▼
-      [PLC X0]
-        │
-        ▼
-   [Ladder Logic]
-        │
-        ▼
-      [PLC Y0]
-        │
-        │ Output
-        ▼
-[Factory I/O Actuator]
+X0
+X1
+X2
+X3
+...
 ```
 
-![Factory I/O Result](screenshots/05_factory_io_result.png)
+하나의 Tag를 기준으로 Multiply를 사용하여 여러 Tag를 생성할 수 있다.
+
+이 기능을 이용하면 Factory I/O와 연결할 PLC 디바이스가 많아졌을 때 설정 작업을 줄일 수 있다.
 
 ---
 
-## 9. 전체 통신 구조
+# 6. PLC Simulator 실행
+
+MX OPC Configurator에서 필요한 Data Tag 설정을 완료한 후 GX Works2로 이동한다.
+
+GX Works2에서 작성한 PLC 프로그램을 **GX Simulator2**에서 실행한다.
 
 ```text
-┌──────────────────┐
-│    Factory I/O   │
-│                  │
-│ Sensor / Motor   │
-└────────┬─────────┘
-         │
-         │ OPC
-         ▼
-┌──────────────────┐
-│ MX OPC Config.   │
-│                  │
-│ PLC Device/Tag   │
-└────────┬─────────┘
-         │
-         │ PLC Communication
-         ▼
-┌──────────────────┐
-│      PLC         │
-│                  │
-│ X Input          │
-│ Y Output         │
-└────────┬─────────┘
-         │
-         ▼
-┌──────────────────┐
-│    GX Works2     │
-│                  │
-│ Ladder Program   │
-└──────────────────┘
+GX Works2
+   ↓
+Simulation Start
+   ↓
+GX Simulator2
 ```
 
-## 10. 실습에서 확인한 내용
+이제 실제 PLC 대신 Simulator에서 PLC 프로그램이 동작하게 된다.
 
-* GX Works2를 이용한 PLC 레더 프로그램 작성
-* PLC 디바이스(X/Y 등)의 이해
-* MX OPC Configurator를 이용한 PLC-OPC 연결
-* PLC 디바이스의 OPC Tag 등록
-* Factory I/O와 OPC 서버 연결
-* Factory I/O에서 OPC Tag Browse
-* PLC 입력과 출력의 가상 설비 연동
-* PLC 프로그램의 실제 동작을 Factory I/O에서 시각적으로 확인
+따라서 GX Simulator2에서 X, Y, M, D 등의 디바이스 값을 확인하거나 변경할 수 있다.
 
-## 11. Troubleshooting
+---
 
-### Factory I/O에서 OPC Server가 보이지 않는 경우
+# 7. OPC 실행
 
-다음 항목을 확인합니다.
+GX Simulator2가 정상적으로 실행된 상태에서 MX OPC Configurator의 OPC 기능을 실행한다.
 
-* OPC 서버가 정상적으로 실행되어 있는지 확인
-* MX OPC Configurator의 PLC 설정 확인
-* PLC 통신 설정 확인
-* 네트워크 연결 확인
-* Factory I/O에서 올바른 Driver를 선택했는지 확인
+이제 앞에서 생성한 Address Space와 Data Tag를 통해 GX Simulator2의 PLC 데이터를 OPC에서 사용할 수 있게 된다.
 
-### OPC Tag가 Browse되지 않는 경우
+전체 데이터 흐름은 다음과 같다.
 
-* OPC 서버에 PLC 디바이스가 정상적으로 등록되어 있는지 확인
-* Tag의 Device 주소 확인
-* PLC와 OPC 서버의 통신 상태 확인
-* Factory I/O의 OPC 연결 상태 확인
+```text
+GX Works2
+    │
+    ▼
+GX Simulator2
+    │
+    ▼
+MX OPC Configurator
+    │
+    ├── X
+    ├── Y
+    ├── M
+    └── D
+```
 
-### PLC 값이 Factory I/O에서 변경되지 않는 경우
+여기서 MX OPC Configurator가 **GX Simulator2의 PLC 디바이스를 OPC를 통해 외부 프로그램에서 접근할 수 있도록 연결하는 역할**을 한다.
 
-PLC Monitor에서 해당 X/Y 디바이스의 값이 실제로 변경되는지 먼저 확인합니다.
+---
+
+# 8. Factory I/O Driver 설정
+
+OPC 설정이 완료되면 Factory I/O에서 PLC와 연결하기 위한 Driver를 설정한다.
+
+Factory I/O의 Driver 설정으로 이동하여 OPC 관련 Driver를 선택한다.
 
 ```text
 Factory I/O
-     ↓
+    ↓
+Drivers
+    ↓
 OPC
-     ↓
-PLC Device
-     ↓
-Ladder Logic
 ```
 
-어느 단계에서 값이 변경되지 않는지 확인하면 문제의 위치를 좁힐 수 있습니다.
+이후 OPC Server에 연결한다.
+
+연결이 정상적으로 이루어지면 Factory I/O에서 OPC Server에 등록되어 있는 Data Tag를 **Browse**할 수 있다.
+
+예를 들어 MX OPC Configurator에서 등록한 Tag가 다음과 같다면:
+
+```text
+X0
+X1
+X2
+Y0
+Y1
+M0
+D0
+```
+
+Factory I/O에서 해당 Tag를 Browse하여 센서나 액추에이터에 연결할 수 있다.
 
 ---
 
-## 12. 정리
+# 9. 전체 구성
 
-이번 실습에서는 **GX Works2 → MX OPC Configurator → Factory I/O**로 이어지는 PLC 연동 과정을 학습했습니다.
+이번 실습의 전체적인 데이터 흐름은 다음과 같다.
 
-특히 단순히 PLC 레더 프로그램을 작성하는 것뿐만 아니라, PLC의 디바이스를 OPC Tag로 구성하고 Factory I/O에서 해당 Tag를 Browse하여 가상 자동화 설비와 연결하는 과정을 경험했습니다.
+```text
+┌─────────────────┐
+│    GX Works2    │
+│  Ladder Program │
+└────────┬────────┘
+         │
+         ▼
+┌─────────────────┐
+│ GX Simulator2   │
+│  SimulatorA     │
+└────────┬────────┘
+         │
+         ▼
+┌──────────────────────┐
+│ MX OPC Configurator  │
+│                      │
+│     Address Space    │
+│          │           │
+│      Data Tag        │
+│   X / Y / M / D      │
+└──────────┬───────────┘
+           │
+           │ OPC
+           ▼
+┌─────────────────┐
+│   Factory I/O   │
+│                 │
+│ Sensor/Actuator │
+└─────────────────┘
+```
 
-이를 통해 PLC 제어 로직과 상위 시스템 간의 데이터 연동 구조를 이해할 수 있었습니다.
+---
+
+# 10. 핵심 정리
+
+이번 실습에서 MX OPC Configurator는 **GX Simulator2에서 동작하는 PLC 디바이스와 Factory I/O 사이를 연결하는 OPC 기반의 중간 계층**으로 사용하였다.
+
+특히 다음 과정을 이해하는 것이 중요하다.
+
+```text
+1. Address Space 생성
+        ↓
+2. New MX Device
+        ↓
+3. GX Simulator2 선택
+        ↓
+4. SimulatorA 선택
+        ↓
+5. Data Tag 생성
+        ↓
+6. Name / I/O Address / Data Type 설정
+        ↓
+7. Data Polling 설정
+        ↓
+8. Multiply를 이용하여 필요한 Tag 복제
+        ↓
+9. GX Works2에서 Simulation 실행
+        ↓
+10. OPC 실행
+        ↓
+11. Factory I/O Driver 설정
+        ↓
+12. OPC Tag Browse
+        ↓
+13. Factory I/O의 Sensor / Actuator와 연결
+```
+
+이 과정을 통해 실제 PLC가 없어도 **GX Works2에서 작성한 PLC 제어 로직을 GX Simulator2에서 실행하고, OPC를 통해 Factory I/O와 연결하여 가상 자동화 시스템을 구성**할 수 있다.
