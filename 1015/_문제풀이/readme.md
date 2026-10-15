@@ -1,82 +1,90 @@
 ---
-id: "python-problem-solutions"
-title: "Python 원본 문제 풀이 소스 및 복잡도 분석"
+id: "python-problem-solving-study-log"
+title: "파이썬 실습 문제 풀이 및 핵심 학습 내용 요약"
 date: "2026-10-15"
-category: "Problem Solving"
-tags: ["python", "solutions", "time-complexity", "space-complexity", "refactoring"]
+category: "Python Study"
+tags: ["python", "learning-log", "problem-solving", "syntax", "refactoring"]
 status: "verified"
-summary: "문제/ 디렉토리에 수록된 문제 세트의 구현 소스, 시간/공간 복잡도 분석 및 리팩토링 오답노트"
+summary: "기초 문법(조건문, 반복문, 함수)을 문제 해결에 적용하며 체득한 핵심 개념과 파일별 학습 기록 요약"
 ---
 
-# 파이썬 문제 풀이 및 해설 (`_문제풀이/`)
+# 파이썬 문제 풀이 학습 기록 (`_문제풀이/`)
 
-본 디렉토리는 `문제/`에 제시된 요구사항을 직접 프로그래밍 언어로 구현하고, 성능 분석(시간/공간 복잡도)과 엣지 케이스 디버깅 과정을 기록하는 **해설 및 풀이 보관소**입니다.
+`문제/` 폴더에 출제된 연습 문제를 직접 풀어보며, 파이썬의 기본 문법(조건 분기, 루프 제어, 함수 설계, 자료구조 가공)을 실무 코드로 전환하는 과정을 정리한 학습 요약 문서입니다.
 
 ---
 
-## 1. 풀이 진행 파이프라인
+## 1. 지금까지 배운 핵심 개념 체계
 
-단순히 통과하는 코드를 넘어 확장성과 효율성을 고려한 4단계 작성 흐름입니다.
+문제들을 해결하면서 다룬 파이썬 코어 개념의 연결 고리입니다.
 
 ```mermaid
 flowchart TD
-    Req["문제 요구사항 명세 확인"] --> Brute["1단계: 단순 무식한 해결 (Brute-force)"]
-    Brute --> Edge["2단계: 경계값/예외 입력 주입 (Edge Case Test)"]
-    Edge --> Refactor["3단계: 시간/공간 복잡도 최적화 (Refactoring)"]
-    Refactor --> Log["4단계: 오답 원인 및 회고 기록"]
+    A["입력 데이터 수신 & 검증<br/>(타입 변환, strip, 빈 값 처리)"] --> B{"조건문 분기<br/>(if / elif / else)"}
+    B --> C["반복문 기반 탐색 & 가공<br/>(for, while, range, enumerate)"]
+    C --> D["자료구조 수집<br/>(list append, dict count, slicing)"]
+    D --> E["함수 모듈화 & 결과 반환<br/>(def, return, 가변인자)"]
 ```
 
 ---
 
-## 2. 문제 풀이 전수 매핑 테이블 (Solution Map)
+## 2. 파일별 학습 내용 및 구현 요약 (Learning Log)
 
-| 풀이 파일명 | 원본 대응 문제 | 주요 알고리즘 / 접근법 | 시간 복잡도 | 공간 복잡도 |
-|---|---|---|---|---|
-| `sol_01.py` | 문제 1 | 단일 패스 분기 평가 (Short-circuit 활용) | $O(1)$ | $O(1)$ |
-| `sol_02.py` | 문제 2 | 투 포인터(Two-pointer) 기반 반복 탐색 | $O(N)$ | $O(1)$ |
-| `sol_03.py` | 문제 3 | 해시 테이블(`dict`) 기반 빈도 카운팅 | $O(N)$ | $O(N)$ |
-| `sol_04.py` | 문제 4 | 함수형 매핑(`map`, `filter`) 및 튜플 언패킹 | $O(N)$ | $O(N)$ |
-| `sol_05.py` | 문제 5 | 정렬 및 슬라이싱 최적화 파이프라인 | $O(N \log N)$ | $O(N)$ |
+각 문제를 풀면서 **어떤 문법을 활용했고, 무엇을 배웠는지** 파일 단위로 요약한 명세입니다.
+
+| 풀이 파일명 | 대응 주제 | 핵심 구현 내용 | 배운 점 및 핵심 개념 (Takeaway) |
+|---|---|---|---|
+| `sol_01.py` | 조건문 & 경계값 판별 | `if-elif-else` 다중 조건식, 비교/논리 연산자(`and`, `or`) | • 조건 평가 시 앞선 조건이 참이면 뒤를 보지 않는 **단축 평가(Short-circuit evaluation)** 원리<br/>• 음수, 0, 잘못된 입력값이 들어왔을 때의 예외 분기 처리 습득 |
+| `sol_02.py` | 반복 제어 & 흐름 조작 | `for`문 시퀀스 순회, `break` 및 `continue` 활용 | • 불필요한 반복을 즉시 중단하는 `break`를 통한 연산 낭비 방지<br/>• 특정 조건을 건너뛰는 `continue`로 들여쓰기 뎁스(Depth)를 줄이는 클린 코드 작성법 체득 |
+| `sol_03.py` | 리스트 & 인덱싱/슬라이싱 | 리스트 컴프리헨션, `[start:end:step]` 슬라이싱 | • 원본 리스트를 변형하지 않고 원하는 구간의 요소를 빠르게 추출하는 슬라이싱 문법 익힘<br/>• `for` 루프 + `append` 구조를 간결한 리스트 컴프리헨션으로 압축하는 방법 습득 |
+| `sol_04.py` | 딕셔너리 기반 집계 | `dict.get()`, Key-Value 순회, 카운팅 로직 | • `KeyError` 없이 안전하게 값을 꺼내는 `get(key, default)` 메서드 활용법<br/>• 대량 데이터에서 특정 항목의 빈도수를 효율적으로 집계하는 해시 자료구조 활용 체득 |
+| `sol_05.py` | 함수 정의 및 스코프 | `def`, 매개변수 기본값, 반환값(`return`), 스코프 | • 함수 내부 로컬 변수와 외부 글로벌 변수 간의 생명주기(Scope) 이해<br/>• 하나의 작업만 책임지는 단일 책임 함수 설계와 다중 반환값(Tuple Unpacking) 처리 습득 |
 
 ---
 
-## 3. 대표 구현 패턴 및 최적화 비교
+## 3. 실습을 통해 체득한 핵심 코드 패턴
 
-### 예시: 리스트 빈도수 집계 최적화 (`sol_03.py`)
+### ① 안전한 딕셔너리 카운팅 (`get` 메서드)
+문제를 풀며 가장 빈번하게 발생했던 `KeyError`를 방지하는 표준 집계 패턴을 학습했습니다.
 
-#### ❌ 나쁜 패턴 (시간복잡도 $O(N^2)$)
 ```python
-# count()를 매 반복마다 호출하여 비효율적인 전체 재탐색 발생
-def bad_frequency(elements: list) -> dict:
-    res = {}
-    for x in elements:
-        res[x] = elements.count(x)  # elements.count() 내부에서 O(N) 순회
-    return res
+# 배운 패턴: 키가 없으면 0을 반환하고 바로 1을 더해 누적
+counts = {}
+for item in data:
+    counts[item] = counts.get(item, 0) + 1
 ```
 
-#### ✅ 개선 패턴 (시간복잡도 $O(N)$)
+### ② 리스트 순회 인덱스와 값 동시 추출 (`enumerate`)
+`range(len(list))` 대신 인덱스와 요소를 한 번에 꺼내 가독성을 높이는 방식을 익혔습니다.
+
 ```python
-# 해시 테이블을 활용한 단일 순회 집계
-def optimized_frequency(elements: list) -> dict:
-    res = {}
-    for x in elements:
-        res[x] = res.get(x, 0) + 1
-    return res
+# 배운 패턴: enumerate로 인덱스와 값을 동시에 안전하게 바인딩
+for idx, val in enumerate(targets):
+    if val == target_value:
+        print(f"인덱스 {idx}에서 발견: {val}")
+```
+
+### ③ 조기 반환(Early Return)을 통한 들여쓰기 최소화
+중첩된 `if`문을 줄이기 위해 잘못된 입력이 들어오면 함수 시작부에서 즉시 탈출하도록 구현했습니다.
+
+```python
+def process_data(data):
+    # 유효하지 않은 데이터는 초기에 걸러내고 즉시 종료
+    if not data:
+        return None
+    
+    # 정상 흐름에서는 들여쓰기 깊이 없이 선형적으로 작성
+    result = [x * 2 for x in data]
+    return result
 ```
 
 ---
 
-## 4. 실전 디버깅 및 함정 회고 (Gotchas & Retrospective)
+## 4. 문제 풀이 과정의 시행착오 및 디버깅 회고
 
-### ① 빈 입력값 및 경계 조건(Boundary Conditions) 누락
-* 입력 리스트가 비어 있거나(`[]`), 문자열의 길이가 0일 때 `IndexError`가 터지지 않도록 선행 방어 조건(`if not elements: return ...`)을 루틴화해야 합니다.
-
-### ② 나눗셈 연산자 사용 시 ZeroDivisionError
-* 평균값 계산 시 분모가 0이 되는 케이스를 사전 검사해야 합니다:
-  ```python
-  # 안전한 평균 연산
-  avg = (sum(scores) / len(scores)) if scores else 0.0
-  ```
-
-### ③ 전역 네임스페이스 오염 방지
-* 풀이 스크립트를 다른 모듈에서 임포트하여 채점할 수 있도록, 독립 실행 블록(`if __name__ == "__main__":`) 밖에는 오직 함수와 클래스 정의만 위치시켜야 합니다.
+1. **인덱스 범위 초과 (`IndexError`):**
+   * 리스트 끝자락을 슬라이싱하거나 루프 인덱스를 직접 다룰 때 `len()`과의 오프셋 차이로 런타임 에러가 자주 발생함 $\rightarrow$ 인덱스를 직접 조작하기보다 파이썬의 이터레이터(`for item in list`)를 쓰는 습관을 들임.
+2. **참조 복사로 인한 원본 훼손:**
+   * `b = a` 형태로 리스트를 대입한 뒤 `b.append()`를 수행했을 때 원본 `a`까지 바뀌는 얕은 복사 문제 경험 $\rightarrow$ `b = a.copy()` 또는 `a[:]` 슬라이싱 복사를 적용함.
+3. **가변 인자 기본값 버그:**
+   * 함수 정의 시 `def add(item, lst=[]):`로 뒀을 때 이전 호출의 데이터가 누적되는 현상 확인 $\rightarrow$ `lst=None` 패턴으로 방어하는 표준 기법을 체득함.
